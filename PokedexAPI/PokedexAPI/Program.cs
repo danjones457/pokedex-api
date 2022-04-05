@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPokemonHandler, PokemonHandler>();
 builder.Services.AddScoped<IPokeApiToPokemonHelper, PokeApiToPokemonHelper>();
+builder.Services.AddScoped<IPokeApiHelper, PokeApiHelper>();
 
 var app = builder.Build();
 

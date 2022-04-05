@@ -7,30 +7,21 @@ namespace PokedexAPI.Handlers
     public class PokemonHandler : IPokemonHandler
     {
         private readonly ILogger<PokemonHandler> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IPokeApiToPokemonHelper _pokeApiToPokemonHelper;
+        private readonly IPokeApiHelper _pokeApiHelper;
 
-        public PokemonHandler(ILogger<PokemonHandler> logger, IConfiguration configuration, IPokeApiToPokemonHelper pokeApiToPokemonHelper)
+        public PokemonHandler(ILogger<PokemonHandler> logger, IPokeApiToPokemonHelper pokeApiToPokemonHelper, IPokeApiHelper pokeApiHelper)
         {
             _logger = logger;
-            _configuration = configuration;
             _pokeApiToPokemonHelper = pokeApiToPokemonHelper;
+            _pokeApiHelper = pokeApiHelper;
         }
 
         public async Task<Pokemon> GetPokemon(string pokemon)
         {
-            try
-            {
-                using var client = new HttpClient();
-                var pokeApiUrl = _configuration["PokeApiUrl"];
-                var pokeApiResponse = await client.GetStringAsync(pokeApiUrl + "/pokemon-species/" + pokemon);
+            var pokeApiResponse = await _pokeApiHelper.GetPokemonSpeciesResponse(pokemon);
 
-                return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
         }
 
     }
