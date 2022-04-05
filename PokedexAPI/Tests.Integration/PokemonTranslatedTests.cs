@@ -67,9 +67,17 @@ namespace Tests.Integration
         }
 
         [Fact]
-        public async void Test_Get_Invalid_Pokemon_Is_Not_Successful()
+        public async void Test_Get_Invalid_Translated_Pokemon_Is_Not_Successful()
         {
             var response = await Client.GetAsync("/pokemon/translated/not-a-pokemon");
+
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async void Test_Get_No_Translated_Pokemon_Is_Not_Successful()
+        {
+            var response = await Client.GetAsync("/pokemon/translated");
 
             Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
         }

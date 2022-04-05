@@ -41,5 +41,13 @@ namespace Tests.Integration
 
             Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async void Test_Get_No_Pokemon_Is_Not_Successful()
+        {
+            var response = await Client.GetAsync("/pokemon");
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }
