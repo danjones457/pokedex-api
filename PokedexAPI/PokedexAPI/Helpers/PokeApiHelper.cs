@@ -26,8 +26,13 @@ namespace PokedexAPI.Helpers
                 var pokeApiUrl = _configuration["PokeApiUrl"];
                 return await client.GetStringAsync(pokeApiUrl + "/pokemon-species/" + pokemon);
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    throw new ArgumentException("We were unable to find that Pokemon.");
+                }
+
                 throw;
             }
         }

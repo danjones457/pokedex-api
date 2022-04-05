@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Newtonsoft.Json;
 using PokedexAPI.Models;
@@ -35,11 +36,9 @@ namespace Tests.Integration
         }
 
         [Fact]
-        public async void Test_Get_Invalid_Pokemon_Is_Not_Successful()
+        public void Test_Get_Invalid_Pokemon_Is_Not_Successful()
         {
-            var response = await Client.GetAsync("/pokemon/not-a-pokemon");
-
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.ThrowsAsync<ArgumentException>(() => Client.GetAsync("/pokemon/not-a-pokemon"));
         }
 
         [Fact]
