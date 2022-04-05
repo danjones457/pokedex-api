@@ -33,5 +33,13 @@ namespace Tests.Integration
             Assert.Equal(habitat, pokemonResponse.Habitat);
             Assert.Equal(isLegendary, pokemonResponse.IsLegendary);
         }
+
+        [Fact]
+        public async void Test_Get_Invalid_Pokemon_Is_Not_Successful()
+        {
+            var response = await Client.GetAsync("/pokemon/not-a-pokemon");
+
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
