@@ -14,10 +14,13 @@ namespace Tests.Integration
             Client = server.CreateClient();
         }
 
-        [Fact]
-        public async void Test_Get_Mewtwo_Is_Successful()
+        [Theory]
+        [InlineData("mewtwo", "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.", "rare", true)]
+        [InlineData("pikachu", "When several of these POKÈMON gather, their electricity could build and cause lightning storms.", "forest", false)]
+        [InlineData("ditto", "Capable of copying an enemy's genetic code to instantly transform itself into a duplicate of the enemy.", "urban", false)]
+        public async void Test_Get_Valid_Pokemon_Is_Successful(string name, string description, string habitat, bool isLegendary)
         {
-            var response = await Client.GetAsync("/pokemon/mewtwo");
+            var response = await Client.GetAsync("/pokemon/" + name);
 
             response.EnsureSuccessStatusCode();
 
@@ -25,10 +28,10 @@ namespace Tests.Integration
 
             var pokemonResponse = JsonConvert.DeserializeObject<Pokemon>(formattedResponse);
 
-            Assert.Equal("mewtwo", pokemonResponse.Name);
-            Assert.Equal("It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.", pokemonResponse.Description);
-            Assert.Equal("rare", pokemonResponse.Habitat);
-            Assert.True(pokemonResponse.IsLegendary);
+            Assert.Equal(name, pokemonResponse.Name);
+            Assert.Equal(description, pokemonResponse.Description);
+            Assert.Equal(habitat, pokemonResponse.Habitat);
+            Assert.Equal(isLegendary, pokemonResponse.IsLegendary);
         }
     }
 }
