@@ -28,6 +28,5 @@ namespace PokedexAPI.Handlers
 
             return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
         }
-
     }
 }

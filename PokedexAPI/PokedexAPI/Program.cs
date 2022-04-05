@@ -14,6 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPokemonHandler, PokemonHandler>();
 builder.Services.AddScoped<IPokeApiToPokemonHelper, PokeApiToPokemonHelper>();
 builder.Services.AddScoped<IPokeApiHelper, PokeApiHelper>();
+builder.Services.AddScoped<IPokemonTranslatedHandler, PokemonTranslatedHandler>();
+builder.Services.AddScoped<IPokemonTranslatedHelper, PokemonTranslatedHelper>();
+builder.Services.AddScoped<ITranslationsHelper, TranslationsHelper>();
 
 var app = builder.Build();
 
