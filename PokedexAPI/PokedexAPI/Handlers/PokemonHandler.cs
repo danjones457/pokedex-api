@@ -17,6 +17,11 @@ namespace PokedexAPI.Handlers
             _pokeApiHelper = pokeApiHelper;
         }
 
+        /// <summary>
+        /// See <see cref="IPokemonHandler.GetPokemon(string)"/>
+        /// </summary>
+        /// <param name="pokemon"></param>
+        /// <returns></returns>
         public async Task<Pokemon> GetPokemon(string pokemon)
         {
             var pokeApiResponse = await _pokeApiHelper.GetPokemonSpeciesResponse(pokemon);

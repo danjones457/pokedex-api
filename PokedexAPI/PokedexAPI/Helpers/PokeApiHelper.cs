@@ -13,6 +13,11 @@ namespace PokedexAPI.Helpers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// See <see cref="IPokeApiHelper.GetPokemonSpeciesResponse(string)"/>
+        /// </summary>
+        /// <param name="pokemon"></param>
+        /// <returns></returns>
         public async Task<string> GetPokemonSpeciesResponse(string pokemon)
         {
             try

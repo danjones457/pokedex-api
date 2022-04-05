@@ -17,6 +17,11 @@ namespace PokedexAPI.Controllers
             _pokemonHandler = pokemonHandler;
         }
 
+        /// <summary>
+        /// Endpoint to fetch Pokemon information based on the name of the passed Pokemon
+        /// </summary>
+        /// <param name="pokemon"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{pokemon}")]
         public async Task<Pokemon> GetAsync(string pokemon)

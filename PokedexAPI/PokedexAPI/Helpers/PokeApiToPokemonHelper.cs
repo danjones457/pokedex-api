@@ -6,6 +6,12 @@ namespace PokedexAPI.Helpers
 {
     public class PokeApiToPokemonHelper : IPokeApiToPokemonHelper
     {
+        /// <summary>
+        /// See <see cref="IPokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(string, string)"/>
+        /// </summary>
+        /// <param name="pokemon"></param>
+        /// <param name="repsonse"></param>
+        /// <returns></returns>
         public Pokemon ConvertPokeApiResponseToPokemon(string pokemon, string repsonse)
         {
             var formattedResponse = JObject.Parse(repsonse);
