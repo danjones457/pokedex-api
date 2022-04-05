@@ -1,5 +1,7 @@
 using PokedexAPI.Handlers;
-using PokedexAPI.Interfaces;
+using PokedexAPI.Helpers;
+using PokedexAPI.Interfaces.Handlers;
+using PokedexAPI.Interfaces.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPokemonHandler, PokemonHandler>();
+builder.Services.AddScoped<IPokeApiToPokemonHelper, PokeApiToPokemonHelper>();
 
 var app = builder.Build();
 

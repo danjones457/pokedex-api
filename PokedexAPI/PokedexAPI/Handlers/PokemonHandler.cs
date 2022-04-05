@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using PokedexAPI.Interfaces;
+﻿using PokedexAPI.Interfaces.Handlers;
+using PokedexAPI.Interfaces.Helpers;
 using PokedexAPI.Models;
 
 namespace PokedexAPI.Handlers
@@ -8,46 +8,24 @@ namespace PokedexAPI.Handlers
     {
         private readonly ILogger<PokemonHandler> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IPokeApiToPokemonHelper _pokeApiToPokemonHelper;
 
-        public PokemonHandler(ILogger<PokemonHandler> logger, IConfiguration configuration)
+        public PokemonHandler(ILogger<PokemonHandler> logger, IConfiguration configuration, IPokeApiToPokemonHelper pokeApiToPokemonHelper)
         {
             _logger = logger;
             _configuration = configuration;
+            _pokeApiToPokemonHelper = pokeApiToPokemonHelper;
         }
 
         public async Task<Pokemon> GetPokemon(string pokemon)
         {
-            using var client = new HttpClient();
-            var pokeApiUrl = _configuration["PokeApiUrl"];
-
             try
             {
+                using var client = new HttpClient();
+                var pokeApiUrl = _configuration["PokeApiUrl"];
                 var pokeApiResponse = await client.GetStringAsync(pokeApiUrl + "/pokemon-species/" + pokemon);
 
-                var formattedResponse = JObject.Parse(pokeApiResponse);
-
-                var habitat = formattedResponse.SelectToken("habitat.name").Value<string>();
-                var isLegendary = formattedResponse.SelectToken("is_legendary").Value<bool>();
-
-                var descriptions = formattedResponse.SelectToken("flavor_text_entries").Value<JArray>();
-                var descriptionsList = descriptions.ToObject<List<JObject>>();
-                var enDescriptionObject = descriptionsList.FirstOrDefault(description => description.SelectToken("language.name").Value<string>() == "en");
-                var enDescription = "";
-
-                if (enDescriptionObject != null)
-                {
-                    enDescription = enDescriptionObject.Value<string>("flavor_text");
-                    enDescription = enDescription.Replace("\n", " ");
-                    enDescription = enDescription.Replace("\f", " ");
-                }
-
-                return new Pokemon
-                {
-                    Name = pokemon,
-                    Description = enDescription,
-                    Habitat = habitat,
-                    IsLegendary = isLegendary,
-                };
+                return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
             }
             catch (Exception ex)
             {

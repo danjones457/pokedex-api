@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PokedexAPI.Interfaces;
+using PokedexAPI.Interfaces.Handlers;
 using PokedexAPI.Models;
 
 namespace PokedexAPI.Controllers

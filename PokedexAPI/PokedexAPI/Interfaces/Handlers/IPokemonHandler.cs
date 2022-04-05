@@ -1,6 +1,6 @@
 ﻿using PokedexAPI.Models;
 
-namespace PokedexAPI.Interfaces
+namespace PokedexAPI.Interfaces.Handlers
 {
     public interface IPokemonHandler
     {
