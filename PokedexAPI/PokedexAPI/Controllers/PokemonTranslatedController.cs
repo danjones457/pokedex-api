@@ -14,7 +14,8 @@ namespace PokedexAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetTranslatedPokemon")]
+        [HttpGet]
+        [Route("{pokemon}")]
         public Pokemon Get(string pokemon)
         {
             return new Pokemon();
