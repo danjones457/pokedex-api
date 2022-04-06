@@ -64,7 +64,170 @@ namespace Tests.Unit.Helpers
                     name = habitat
                 },
                 is_legendary = isLegendary,
-                flavor_text_entries = flavor_text_entries
+                flavor_text_entries
+            };
+            var stringResponse = JsonConvert.SerializeObject(response);
+
+            var helperResponse = _helper.ConvertPokeApiResponseToPokemon(pokemon, stringResponse);
+
+            Assert.Equal(expectedResult.Name, helperResponse.Name);
+            Assert.Equal(expectedResult.Habitat, helperResponse.Habitat);
+            Assert.Equal(expectedResult.Description, helperResponse.Description);
+            Assert.Equal(expectedResult.IsLegendary, helperResponse.IsLegendary);
+        }
+
+        [Fact]
+        public void PokeApiToPokemonHelper_Should_Return_Empty_Habitat_If_Unable_To_Get_From_The_Response()
+        {
+            var pokemon = "test pokemon";
+            var isLegendary = true;
+            var description = "test description";
+
+            var expectedResult = new Pokemon
+            {
+                Name = pokemon,
+                Habitat = "",
+                Description = description,
+                IsLegendary = isLegendary
+            };
+
+            var flavor_text_entries = new List<object>
+            {
+                new {
+                    flavor_text = description,
+                    language = new
+                    {
+                        name = "en"
+                    }
+                }
+            };
+            var response = new
+            {
+                is_legendary = isLegendary,
+                flavor_text_entries
+            };
+            var stringResponse = JsonConvert.SerializeObject(response);
+
+            var helperResponse = _helper.ConvertPokeApiResponseToPokemon(pokemon, stringResponse);
+
+            Assert.Equal(expectedResult.Name, helperResponse.Name);
+            Assert.Equal(expectedResult.Habitat, helperResponse.Habitat);
+            Assert.Equal(expectedResult.Description, helperResponse.Description);
+            Assert.Equal(expectedResult.IsLegendary, helperResponse.IsLegendary);
+        }
+
+        [Fact]
+        public void PokeApiToPokemonHelper_Should_Return_Empty_Description_If_Unable_To_Get_From_The_Response()
+        {
+            var pokemon = "test pokemon";
+            var habitat = "test habitat";
+            var isLegendary = true;
+
+            var expectedResult = new Pokemon
+            {
+                Name = pokemon,
+                Habitat = habitat,
+                Description = "",
+                IsLegendary = isLegendary
+            };
+
+            var response = new
+            {
+                habitat = new
+                {
+                    name = habitat
+                },
+                is_legendary = isLegendary,
+            };
+            var stringResponse = JsonConvert.SerializeObject(response);
+
+            var helperResponse = _helper.ConvertPokeApiResponseToPokemon(pokemon, stringResponse);
+
+            Assert.Equal(expectedResult.Name, helperResponse.Name);
+            Assert.Equal(expectedResult.Habitat, helperResponse.Habitat);
+            Assert.Equal(expectedResult.Description, helperResponse.Description);
+            Assert.Equal(expectedResult.IsLegendary, helperResponse.IsLegendary);
+        }
+
+        [Fact]
+        public void PokeApiToPokemonHelper_Should_Return_Empty_Description_If_Unable_To_Get_An_English_Description_From_The_Response()
+        {
+            var pokemon = "test pokemon";
+            var habitat = "test habitat";
+            var isLegendary = true;
+            var description = "test description";
+
+            var expectedResult = new Pokemon
+            {
+                Name = pokemon,
+                Habitat = habitat,
+                Description = "",
+                IsLegendary = isLegendary
+            };
+
+            var flavor_text_entries = new List<object>
+            {
+                new {
+                    flavor_text = description,
+                    language = new
+                    {
+                        name = "fr"
+                    }
+                }
+            };
+
+            var response = new
+            {
+                habitat = new
+                {
+                    name = habitat
+                },
+                is_legendary = isLegendary,
+                flavor_text_entries
+            };
+            var stringResponse = JsonConvert.SerializeObject(response);
+
+            var helperResponse = _helper.ConvertPokeApiResponseToPokemon(pokemon, stringResponse);
+
+            Assert.Equal(expectedResult.Name, helperResponse.Name);
+            Assert.Equal(expectedResult.Habitat, helperResponse.Habitat);
+            Assert.Equal(expectedResult.Description, helperResponse.Description);
+            Assert.Equal(expectedResult.IsLegendary, helperResponse.IsLegendary);
+        }
+
+        [Fact]
+        public void PokeApiToPokemonHelper_Should_Return_False_IsLegendary_If_Unable_To_Get_From_The_Response()
+        {
+            var pokemon = "test pokemon";
+            var habitat = "test habitat";
+            var description = "test description";
+
+            var expectedResult = new Pokemon
+            {
+                Name = pokemon,
+                Habitat = habitat,
+                Description = "",
+                IsLegendary = false
+            };
+
+            var flavor_text_entries = new List<object>
+            {
+                new {
+                    flavor_text = description,
+                    language = new
+                    {
+                        name = "fr"
+                    }
+                }
+            };
+
+            var response = new
+            {
+                habitat = new
+                {
+                    name = habitat
+                },
+                flavor_text_entries
             };
             var stringResponse = JsonConvert.SerializeObject(response);
 
