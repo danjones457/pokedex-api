@@ -24,10 +24,15 @@ namespace PokedexAPI.Handlers
         /// <returns></returns>
         public async Task<Pokemon> GetPokemon(string pokemon)
         {
-            var pokeApiResponse = await _pokeApiHelper.GetPokemonSpeciesResponse(pokemon);
-
-            return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
+            try
+            {
+                var pokeApiResponse = await _pokeApiHelper.GetPokemonSpeciesResponse(pokemon);
+                return _pokeApiToPokemonHelper.ConvertPokeApiResponseToPokemon(pokemon, pokeApiResponse);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
     }
 }

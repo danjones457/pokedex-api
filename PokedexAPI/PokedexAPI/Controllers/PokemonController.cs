@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PokedexAPI.Interfaces.Handlers;
 using PokedexAPI.Models;
 
@@ -24,9 +25,22 @@ namespace PokedexAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{pokemon}")]
-        public async Task<Pokemon> GetAsync(string pokemon)
+        public async Task<ActionResult> GetAsync(string pokemon)
         {
-            return await _pokemonHandler.GetPokemon(pokemon);
+            try
+            {
+                var pokemonResponse = await _pokemonHandler.GetPokemon(pokemon);
+                return Ok(JsonConvert.SerializeObject(pokemonResponse));
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
         }
     }
 }

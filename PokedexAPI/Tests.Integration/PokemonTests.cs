@@ -1,6 +1,7 @@
-using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PokedexAPI.Models;
 using Xunit;
 
@@ -36,9 +37,15 @@ namespace Tests.Integration
         }
 
         [Fact]
-        public void Test_Get_Invalid_Pokemon_Is_Not_Successful()
+        public async Task Test_Get_Invalid_Pokemon_Is_Not_Successful()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => Client.GetAsync("/pokemon/not-a-pokemon"));
+            var response = await Client.GetAsync("/pokemon/not-a-pokemon");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var formattedResponse = JObject.Parse(responseContent);
+            var responseMessage = formattedResponse.Value<string>("message");
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("We were unable to find that Pokemon.", responseMessage);
         }
 
         [Fact]

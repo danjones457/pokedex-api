@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PokedexAPI.Models;
+using Newtonsoft.Json;
+using PokedexAPI.Interfaces.Handlers;
 
 namespace PokedexAPI.Controllers
 {
@@ -8,10 +9,12 @@ namespace PokedexAPI.Controllers
     public class PokemonTranslatedController : ControllerBase
     {
         private readonly ILogger<PokemonTranslatedController> _logger;
+        private readonly IPokemonTranslatedHandler _pokemonTranslatedHandler;
 
-        public PokemonTranslatedController(ILogger<PokemonTranslatedController> logger)
+        public PokemonTranslatedController(ILogger<PokemonTranslatedController> logger, IPokemonTranslatedHandler pokemonTranslatedHandler)
         {
             _logger = logger;
+            _pokemonTranslatedHandler = pokemonTranslatedHandler;
         }
 
         /// <summary>
@@ -22,9 +25,23 @@ namespace PokedexAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{pokemon}")]
-        public Pokemon Get(string pokemon)
+        public async Task<ActionResult> Get(string pokemon)
         {
-            return new Pokemon();
+            try
+            {
+                var pokemonResponse = await _pokemonTranslatedHandler.GetTranslatedPokemon(pokemon);
+                return Ok(JsonConvert.SerializeObject(pokemonResponse));
+
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
         }
     }
 }
