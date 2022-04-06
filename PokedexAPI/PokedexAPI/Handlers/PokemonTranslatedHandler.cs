@@ -26,7 +26,7 @@ namespace PokedexAPI.Handlers
         {
             var pokemonResponse = await _pokemonHandler.GetPokemon(pokemon);
 
-            return _pokemonTranslatedHelper.GetTranslatedPokemon(pokemonResponse);
+            return await _pokemonTranslatedHelper.GetTranslatedPokemon(pokemonResponse);
         }
     }
 }

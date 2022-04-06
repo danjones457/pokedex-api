@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PokedexAPI.Interfaces.Handlers;
 using PokedexAPI.Models;
 
 namespace PokedexAPI.Controllers
@@ -8,10 +9,12 @@ namespace PokedexAPI.Controllers
     public class PokemonTranslatedController : ControllerBase
     {
         private readonly ILogger<PokemonTranslatedController> _logger;
+        private readonly IPokemonTranslatedHandler _pokemonTranslatedHandler;
 
-        public PokemonTranslatedController(ILogger<PokemonTranslatedController> logger)
+        public PokemonTranslatedController(ILogger<PokemonTranslatedController> logger, IPokemonTranslatedHandler pokemonTranslatedHandler)
         {
             _logger = logger;
+            _pokemonTranslatedHandler = pokemonTranslatedHandler;
         }
 
         /// <summary>
@@ -22,9 +25,9 @@ namespace PokedexAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{pokemon}")]
-        public Pokemon Get(string pokemon)
+        public async Task<Pokemon> Get(string pokemon)
         {
-            return new Pokemon();
+            return await _pokemonTranslatedHandler.GetTranslatedPokemon(pokemon);
         }
     }
 }

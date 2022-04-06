@@ -33,7 +33,7 @@ namespace Tests.Integration
             true)]
         public async void Test_Get_Valid_Translated_Pokemon_For_Yoda_Translation_Is_Successful(string name, string description, string habitat, bool isLegendary)
         {
-            var response = await Client.GetAsync("/pokemon/" + name);
+            var response = await Client.GetAsync("/pokemon/translated/" + name);
 
             response.EnsureSuccessStatusCode();
 
@@ -48,11 +48,11 @@ namespace Tests.Integration
         }
 
         [Theory]
-        [InlineData("ratta", "Bites aught at which hour 't attacks. Bawbling and very quick, 't is a ingraft sight in many places.", "grassland", false)]
-        [InlineData("caterpie", "Its short feet art tipped with suction pads yond enable 't to tirelessly climb slopes and walls. ", "forest", false)]
+        [InlineData("rattata", "Bites aught at which hour 't attacks. Bawbling and very quick, 't is a ingraft sight in many places.", "grassland", false)]
+        [InlineData("caterpie", "Its short feet art tipped with suction pads yond enable 't to tirelessly climb slopes and walls.", "forest", false)]
         public async void Test_Get_Valid_Translated_Pokemon_For_Shakespeare_Translation_Is_Successful(string name, string description, string habitat, bool isLegendary)
         {
-            var response = await Client.GetAsync("/pokemon/" + name);
+            var response = await Client.GetAsync("/pokemon/translated/" + name);
 
             response.EnsureSuccessStatusCode();
 

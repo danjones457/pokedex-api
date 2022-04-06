@@ -21,6 +21,9 @@ namespace PokedexAPI.Helpers
         /// <returns></returns>
         public async Task<Pokemon> GetTranslatedPokemon(Pokemon pokemon)
         {
+            if (pokemon == null) throw new ArgumentNullException(nameof(pokemon));
+            if (pokemon.Description == null) return pokemon;
+
             try
             {
                 if (pokemon.Habitat == "cave" || pokemon.IsLegendary)
@@ -35,7 +38,7 @@ namespace PokedexAPI.Helpers
                 }
                 return pokemon;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log exception here
                 return pokemon;
