@@ -12,9 +12,9 @@ namespace PokedexAPI.Handlers
 
         public PokemonHandler(ILogger<PokemonHandler> logger, IPokeApiToPokemonHelper pokeApiToPokemonHelper, IPokeApiHelper pokeApiHelper)
         {
-            _logger = logger;
-            _pokeApiToPokemonHelper = pokeApiToPokemonHelper;
-            _pokeApiHelper = pokeApiHelper;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _pokeApiToPokemonHelper = pokeApiToPokemonHelper ?? throw new ArgumentNullException(nameof(pokeApiToPokemonHelper));
+            _pokeApiHelper = pokeApiHelper ?? throw new ArgumentNullException(nameof(pokeApiHelper));
         }
 
         /// <summary>
@@ -24,6 +24,8 @@ namespace PokedexAPI.Handlers
         /// <returns></returns>
         public async Task<Pokemon> GetPokemon(string pokemon)
         {
+            if (string.IsNullOrWhiteSpace(pokemon)) throw new ArgumentNullException(nameof(pokemon));
+
             try
             {
                 var pokeApiResponse = await _pokeApiHelper.GetPokemonSpeciesResponse(pokemon);
