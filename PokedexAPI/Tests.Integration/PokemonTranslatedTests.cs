@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PokedexAPI.Models;
+using System;
 using System.Net.Http;
 using Xunit;
 
@@ -70,16 +72,24 @@ namespace Tests.Integration
         public async void Test_Get_Invalid_Translated_Pokemon_Is_Not_Successful()
         {
             var response = await Client.GetAsync("/pokemon/translated/not-a-pokemon");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var formattedResponse = JObject.Parse(responseContent);
+            var responseMessage = formattedResponse.Value<string>("message");
 
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("We were unable to find that Pokemon.", responseMessage);
         }
 
         [Fact]
         public async void Test_Get_No_Translated_Pokemon_Is_Not_Successful()
         {
             var response = await Client.GetAsync("/pokemon/translated");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var formattedResponse = JObject.Parse(responseContent);
+            var responseMessage = formattedResponse.Value<string>("message");
 
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal("We were unable to find that Pokemon.", responseMessage);
         }
     }
 }

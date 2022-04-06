@@ -15,14 +15,43 @@ namespace PokedexAPI.Helpers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// See <see cref="ITranslationsHelper.TranslateToShakespeare(string)"/>
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
         public async Task<string> TranslateToShakespeare(string description)
+        {
+            var shakespeareUrl = _configuration["TranslatorApiUrl:Shakespeare"];
+            
+            return await GetTranslation(description, shakespeareUrl);
+        }
+
+        /// <summary>
+        /// See <see cref="ITranslationsHelper.TranslateToYoda(string)"/>
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        public async Task<string> TranslateToYoda(string description)
+        {
+            var yodaUrl = _configuration["TranslatorApiUrl:Yoda"];
+
+            return await GetTranslation(description, yodaUrl);
+        }
+
+        /// <summary>
+        /// Hit the translation API with the passed description text
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="translationUrl"></param>
+        /// <returns></returns>
+        private static async Task<string> GetTranslation(string description, string translationUrl)
         {
             try
             {
                 using var client = new HttpClient();
-                var shakespeareUrl = _configuration["TranslatorApiUrl:Shakespeare"];
                 var endcodedDescription = System.Web.HttpUtility.UrlEncode(description);
-                var response = await client.GetStringAsync(shakespeareUrl + "?text=" + endcodedDescription);
+                var response = await client.GetStringAsync(translationUrl + "?text=" + endcodedDescription);
 
                 var formattedResponse = JObject.Parse(response);
                 var translatedText = formattedResponse.SelectToken("contents.translated")?.Value<string>() ?? description;
@@ -35,11 +64,6 @@ namespace PokedexAPI.Helpers
                 // Log exception here
                 return description;
             }
-        }
-
-        public Task<string> TranslateToYoda(string description)
-        {
-            throw new NotImplementedException();
         }
     }
 }
