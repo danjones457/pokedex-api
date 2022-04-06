@@ -12,9 +12,9 @@ namespace PokedexAPI.Handlers
 
         public PokemonTranslatedHandler(ILogger<PokemonTranslatedHandler> logger, IPokemonHandler pokemonHandler, IPokemonTranslatedHelper pokemonTranslatedHelper)
         {
-            _logger = logger;
-            _pokemonHandler = pokemonHandler;
-            _pokemonTranslatedHelper = pokemonTranslatedHelper;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _pokemonHandler = pokemonHandler ?? throw new ArgumentNullException(nameof(pokemonHandler));
+            _pokemonTranslatedHelper = pokemonTranslatedHelper ?? throw new ArgumentNullException(nameof(pokemonTranslatedHelper));
         }
 
         /// <summary>
@@ -24,6 +24,8 @@ namespace PokedexAPI.Handlers
         /// <returns></returns>
         public async Task<Pokemon> GetTranslatedPokemon(string pokemon)
         {
+            if (string.IsNullOrWhiteSpace(pokemon)) throw new ArgumentNullException(nameof(pokemon));
+
             var pokemonResponse = await _pokemonHandler.GetPokemon(pokemon);
 
             return await _pokemonTranslatedHelper.GetTranslatedPokemon(pokemonResponse);
