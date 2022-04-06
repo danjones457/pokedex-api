@@ -12,9 +12,9 @@ namespace PokedexAPI.Helpers
 
         public TranslationsHelper(ILogger<TranslationsHelper> logger, IConfiguration configuration, HttpClient httpClient)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _httpClient = httpClient;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -24,6 +24,8 @@ namespace PokedexAPI.Helpers
         /// <returns></returns>
         public async Task<string> TranslateToShakespeare(string description)
         {
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentNullException(nameof(description));
+
             var shakespeareUrl = _configuration["TranslatorApiUrl:Shakespeare"];
             
             return await GetTranslation(description, shakespeareUrl);
@@ -36,6 +38,8 @@ namespace PokedexAPI.Helpers
         /// <returns></returns>
         public async Task<string> TranslateToYoda(string description)
         {
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentNullException(nameof(description));
+
             var yodaUrl = _configuration["TranslatorApiUrl:Yoda"];
 
             return await GetTranslation(description, yodaUrl);
