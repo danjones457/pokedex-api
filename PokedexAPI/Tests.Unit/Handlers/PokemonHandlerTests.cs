@@ -11,9 +11,9 @@ namespace Tests.Unit.Handlers
 {
     public class PokemonHandlerTests
     {
-        private Mock<ILogger<PokemonHandler>> _logger;
-        private Mock<IPokeApiToPokemonHelper> _pokeApiToPokemonHelper;
-        private Mock<IPokeApiHelper> _pokeApiHelper;
+        private readonly Mock<ILogger<PokemonHandler>> _logger;
+        private readonly Mock<IPokeApiToPokemonHelper> _pokeApiToPokemonHelper;
+        private readonly Mock<IPokeApiHelper> _pokeApiHelper;
 
         public PokemonHandlerTests()
         {
@@ -53,17 +53,17 @@ namespace Tests.Unit.Handlers
         public async Task PokemonHandler_Should_Return_Valid_Pokemon_When_Valid_String_Passed()
         {
             var pokemonName = "test name";
-            var pokemonDescription = "test species response";
+            var pokemonSpeciesResponse = "test species response";
 
             var expectedResult = new Pokemon 
             {
                 Name = pokemonName,
-                Description = pokemonDescription,
+                Description = "test description",
                 Habitat = "cave",
                 IsLegendary = true,
             };
 
-            _pokeApiHelper.Setup(x => x.GetPokemonSpeciesResponse(It.IsAny<string>())).Returns(Task.FromResult(pokemonDescription));
+            _pokeApiHelper.Setup(x => x.GetPokemonSpeciesResponse(It.IsAny<string>())).Returns(Task.FromResult(pokemonSpeciesResponse));
             _pokeApiToPokemonHelper.Setup(
                 x => x.ConvertPokeApiResponseToPokemon(
                     It.IsAny<string>(),
@@ -72,6 +72,10 @@ namespace Tests.Unit.Handlers
 
             var handler = new PokemonHandler(_logger.Object, _pokeApiToPokemonHelper.Object, _pokeApiHelper.Object);
             var pokemonResponse = await handler.GetPokemon(pokemonName);
+
+            // Verify the correct methods were called only once
+            _pokeApiHelper.Verify(x => x.GetPokemonSpeciesResponse(It.Is<string>(x => x == pokemonName)), Times.Once());
+            _pokeApiToPokemonHelper.Verify(x => x.ConvertPokeApiResponseToPokemon(It.Is<string>(x => x == pokemonName), It.Is<string>(x => x == pokemonSpeciesResponse)), Times.Once());
 
             Assert.Equal(expectedResult, pokemonResponse);
         }
