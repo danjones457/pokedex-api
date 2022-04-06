@@ -5,7 +5,7 @@ namespace PokedexAPI.Helpers
 {
     public class PokemonTranslatedHelper : IPokemonTranslatedHelper
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<PokemonTranslatedHelper> _logger;
         private readonly ITranslationsHelper _translationsHelper;
 
         public PokemonTranslatedHelper(ILogger<PokemonTranslatedHelper> logger, ITranslationsHelper translationsHelper)
@@ -22,7 +22,7 @@ namespace PokedexAPI.Helpers
         public async Task<Pokemon> GetTranslatedPokemon(Pokemon pokemon)
         {
             if (pokemon == null) throw new ArgumentNullException(nameof(pokemon));
-            if (pokemon.Description == null) return pokemon;
+            if (string.IsNullOrWhiteSpace(pokemon.Description)) return pokemon;
 
             try
             {
