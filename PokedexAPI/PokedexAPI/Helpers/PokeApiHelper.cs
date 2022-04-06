@@ -10,9 +10,9 @@ namespace PokedexAPI.Helpers
 
         public PokeApiHelper(ILogger<PokeApiHelper> logger, IConfiguration configuration, HttpClient httpClient)
         {
-            _logger = logger;
-            _configuration = configuration;
-            _httpClient = httpClient;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -22,6 +22,8 @@ namespace PokedexAPI.Helpers
         /// <returns></returns>
         public async Task<string> GetPokemonSpeciesResponse(string pokemon)
         {
+            if (string.IsNullOrWhiteSpace(pokemon)) throw new ArgumentNullException(nameof(pokemon));
+
             try
             {
                 var pokeApiUrl = _configuration["PokeApiUrl"];
