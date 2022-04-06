@@ -6,11 +6,13 @@ namespace PokedexAPI.Helpers
     {
         private readonly ILogger<PokeApiHelper> _logger;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public PokeApiHelper(ILogger<PokeApiHelper> logger, IConfiguration configuration)
+        public PokeApiHelper(ILogger<PokeApiHelper> logger, IConfiguration configuration, HttpClient httpClient)
         {
             _logger = logger;
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         /// <summary>
@@ -22,9 +24,8 @@ namespace PokedexAPI.Helpers
         {
             try
             {
-                using var client = new HttpClient();
                 var pokeApiUrl = _configuration["PokeApiUrl"];
-                return await client.GetStringAsync(pokeApiUrl + "/pokemon-species/" + pokemon);
+                return await _httpClient.GetStringAsync(pokeApiUrl + "/pokemon-species/" + pokemon);
             }
             catch (HttpRequestException ex)
             {

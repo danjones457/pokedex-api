@@ -8,11 +8,13 @@ namespace PokedexAPI.Helpers
     {
         private readonly ILogger<TranslationsHelper> _logger;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public TranslationsHelper(ILogger<TranslationsHelper> logger, IConfiguration configuration)
+        public TranslationsHelper(ILogger<TranslationsHelper> logger, IConfiguration configuration, HttpClient httpClient)
         {
             _logger = logger;
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         /// <summary>
@@ -45,13 +47,12 @@ namespace PokedexAPI.Helpers
         /// <param name="description"></param>
         /// <param name="translationUrl"></param>
         /// <returns></returns>
-        private static async Task<string> GetTranslation(string description, string translationUrl)
+        private async Task<string> GetTranslation(string description, string translationUrl)
         {
             try
             {
-                using var client = new HttpClient();
                 var endcodedDescription = System.Web.HttpUtility.UrlEncode(description);
-                var response = await client.GetStringAsync(translationUrl + "?text=" + endcodedDescription);
+                var response = await _httpClient.GetStringAsync(translationUrl + "?text=" + endcodedDescription);
 
                 var formattedResponse = JObject.Parse(response);
                 var translatedText = formattedResponse.SelectToken("contents.translated")?.Value<string>() ?? description;
